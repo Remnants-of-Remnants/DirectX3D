@@ -64,16 +64,6 @@ void CCreateTempLevel::Init()
 
 void CCreateTempLevel::CreateTempLevel()
 {		
-	/*Ptr<CMaterial> pBackgroudMtrl = CAssetMgr::GetInst()->FindAsset<CMaterial>(L"BackgroundMtrl");
-	Ptr<CMaterial> pStd2DMtrl = CAssetMgr::GetInst()->FindAsset<CMaterial>(L"Std2DMtrl");
-
-	pBackgroudMtrl->SetTexParam(TEX_PARAM::TEX_0, CAssetMgr::GetInst()->Load<CTexture>(L"texture\\Background.jpg", L"texture\\Background.jpg"));
-	pStd2DMtrl->SetTexParam(TEX_PARAM::TEX_0, CAssetMgr::GetInst()->Load<CTexture>(L"texture\\Fighter.bmp", L"texture\\Fighter.bmp"));*/
-
-	/*CLevel* pLevel = CLevelSaveLoad::LoadLevel(L"level\\temp.lv");
-	CLevelMgr::GetInst()->ChangeLevel(pLevel, LEVEL_STATE::STOP);
-	return;*/
-
 
 	CLevel* pTempLevel = new CLevel;
 
@@ -85,20 +75,6 @@ void CCreateTempLevel::CreateTempLevel()
 	pTempLevel->GetLayer(5)->SetName(L"Light");
 	pTempLevel->GetLayer(6)->SetName(L"Tile");
 	pTempLevel->GetLayer(31)->SetName(L"UI");
-
-	// ComputeShader 테스트
-	// 사용할 텍스쳐 생성
-	Ptr<CTexture> pTestTex = CAssetMgr::GetInst()->CreateTexture(L"TestTex"
-		, 1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM
-		, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS);
-
-	Ptr<CSetColorShader> pCS = (CSetColorShader*)CAssetMgr::GetInst()->FindAsset<CComputeShader>(L"SetColorShader").Get();
-	pCS->SetColor(Vec3(1.f, 0.f, 0.f));
-	pCS->SetTargetTexture(pTestTex);
-	pCS->Execute();
-
-	tPixel* pPixel = pTestTex->GetPixels();
-	tPixel pixel = pPixel[pTestTex->GetWidth() * 1 + 5];
 
 	// Main Camera Object 생성
 	CGameObject* pCamObj = new CGameObject;
@@ -133,6 +109,37 @@ void CCreateTempLevel::CreateTempLevel()
 
 	CGameObject* pObj = nullptr;
 
+	
+	// 3D Light 추가
+	pObj = new CGameObject;
+	pObj->SetName(L"Light3D");
+	pObj->AddComponent(new CTransform);
+	pObj->AddComponent(new CLight3D);
+
+	pObj->Transform()->SetRelativePos(Vec3(-500.f, 0.f, 500.f));
+
+	pObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pObj->Light3D()->SetLightColor(Vec3(1.f, 0.3f, 0.3f));
+	pObj->Light3D()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
+	pObj->Light3D()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+	pObj->Light3D()->SetRadius(1000.f);
+
+	pTempLevel->AddObject(pObj, L"Default", false);
+
+	pObj = pObj->Clone();
+	pObj->SetName(L"Light3D_Clone");
+	pObj->Transform()->SetRelativePos(Vec3(500.f, 0.f, 500.f));
+	pObj->Light3D()->SetLightColor(Vec3(0.3f, 0.3f, 1.f));
+	pTempLevel->AddObject(pObj, L"Default", false);
+
+
+	pObj = pObj->Clone();
+	pObj->SetName(L"Light3D_Clone2");
+	pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	pObj->Light3D()->SetLightColor(Vec3(0.3f, 1.f, 0.3f));
+	pTempLevel->AddObject(pObj, L"Default", false);
+
+
 	// Player Object 생성
 	pObj = new CGameObject;
 	pObj->SetName(L"Player");
@@ -144,15 +151,15 @@ void CCreateTempLevel::CreateTempLevel()
 	pObj->AddComponent(new CPlayerScript);
 	pObj->AddComponent(new CMissileScript);
 
-	pObj->Transform()->SetRelativePos(Vec3(0.f, -1000.f, 500.f));
-	pObj->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
+	pObj->Transform()->SetRelativePos(Vec3(0.f, -500.f, 500.f));
+	pObj->Transform()->SetRelativeScale(Vec3(3000.f, 3000.f, 3000.f));
 	pObj->Transform()->SetRelativeRotation(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
 	pObj->Collider2D()->SetAbsolute(true);
 	pObj->Collider2D()->SetOffsetScale(Vec2(100.f, 100.f));
 	pObj->Collider2D()->SetOffsetPos(Vec2(0.f, 0.f));
 
-	pObj->MeshRender()->SetMesh(CAssetMgr::GetInst()->FindAsset<CMesh>(L"SphereMesh"));
+	pObj->MeshRender()->SetMesh(CAssetMgr::GetInst()->FindAsset<CMesh>(L"RectMesh"));
 	pObj->MeshRender()->SetMaterial(CAssetMgr::GetInst()->FindAsset<CMaterial>(L"Std3DMtrl"));
 	pObj->MeshRender()->GetMaterial()->SetTexParam(TEX_PARAM::TEX_0, CAssetMgr::GetInst()->Load<CTexture>(L"texture\\tile\\TILE_01.tga", L"texture\\tile\\TILE_01.tga"));
 	pObj->MeshRender()->GetMaterial()->SetTexParam(TEX_PARAM::TEX_1, CAssetMgr::GetInst()->Load<CTexture>(L"texture\\tile\\TILE_01_N.tga", L"texture\\tile\\TILE_01_N.tga"));

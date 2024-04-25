@@ -166,6 +166,9 @@
     <ClInclude Include="CFontMgr.h">
       <Filter>04. Manager\FontMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CLight3D.h">
+      <Filter>08. Component\07. Light3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -320,6 +323,9 @@
     </ClCompile>
     <ClCompile Include="CFontMgr.cpp">
       <Filter>04. Manager\FontMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight3D.cpp">
+      <Filter>08. Component\07. Light3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -487,6 +493,9 @@
     </Filter>
     <Filter Include="ShaderCode\02. Render\3DShader">
       <UniqueIdentifier>{022098e6-760f-4655-93e7-750e8c7d62f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Component\07. Light3D">
+      <UniqueIdentifier>{d785f73f-e7f6-4f87-a7bd-6ed5fdf54a2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

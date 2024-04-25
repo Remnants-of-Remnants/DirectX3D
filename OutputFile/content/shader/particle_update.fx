@@ -41,8 +41,8 @@ void CS_ParticleUpdate(uint3 id : SV_DispatchThreadID)
             // 이때 SpawnCount 를 오히려 늘려버리는 현상이 발생할 수 있다. 
             // InterlockedCompareExchange 를 통해서 예상한 값과 일치할 경우에만 
             // 교체를 하도록 하는 함수를 사용한다.
-            //InterlockedCompareExchange(SpawnCount, AliveCount, Exchange, Origin);
-            InterlockedExchange(SpawnCount, Exchange, Origin);
+            InterlockedCompareExchange(SpawnCount, AliveCount, Exchange, Origin);
+            //InterlockedExchange(SpawnCount, Exchange, Origin);
             
             if (AliveCount == Origin)
             {
@@ -88,7 +88,7 @@ void CS_ParticleUpdate(uint3 id : SV_DispatchThreadID)
                                 
                 // 스폰 Life 설정
                 Particle.Age = 0.f;
-                Particle.Life = (Module.MaxLife - Module.MinLife) * vRand[0] + Module.MaxLife;
+                Particle.Life = (Module.MaxLife - Module.MinLife) * vRand[0] + Module.MinLife;
                       
                 // 스폰 Mass 설정
                 Particle.Mass = clamp(vRand1[0], Module.MinMass, Module.MaxMass);
@@ -107,6 +107,12 @@ void CS_ParticleUpdate(uint3 id : SV_DispatchThreadID)
                         float3 vDir = -normalize(Particle.vLocalPos.xyz);
                         Particle.vVelocity.xyz = vDir * clamp(vRand[2], Module.MinSpeed, Module.MaxSpeed);
                     }
+                    if (2 == Module.AddVelocityType)
+                    {
+                        float3 vDir = normalize(Module.FixedDirection);
+                        Particle.vVelocity.xyz = vDir * clamp(vRand[2], Module.MinSpeed, Module.MaxSpeed);
+                    }
+
                 }
                 else
                 {

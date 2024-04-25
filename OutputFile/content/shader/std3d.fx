@@ -2,20 +2,23 @@
 #define _STD3D
 
 #include "value.fx"
+#include "func.fx"
 
-
-static float3 g_LightPos = float3(0.f, 0.f, 0.f);
-static float3 g_LightDir = float3(1.f, -1.f, 1.f);
-static float3 g_LightColor = float3(1.f, 1.f, 1.f);
-static float3 g_LightAmbient = float3(0.1f, 0.1f, 0.1f);
-static float3 g_SpecularRatio = float3(0.3f, 0.3f, 0.3f);
+//static float3 g_LightPos = float3(0.f, 0.f, 0.f);
+//static float3 g_LightDir = float3(1.f, -1.f, 1.f);
+//static float3 g_LightColor = float3(1.f, 1.f, 1.f);
+//static float3 g_LightAmbient = float3(0.1f, 0.1f, 0.1f);
+//static float3 g_SpecularRatio = float3(0.3f, 0.3f, 0.3f);
 
 
 struct VTX_IN
 {
     float3 vPos : POSITION;
-    float3 vUV  : TEXCOORD;    
-    float3 vNormal : NORMAL;    
+    float2 vUV : TEXCOORD;
+    
+    float3 vTangent : TANGENT;
+    float3 vNormal : NORMAL;
+    float3 vBinormal : BINORMAL;
 };
 
 
@@ -26,7 +29,9 @@ struct VTX_OUT
     float LightPow : FOG;
         
     float3 vViewPos : POSITION;
+    float3 vViewTangent : TANGENT;
     float3 vViewNormal : NORMAL;
+    float3 vViewBinormal : BINORMAL;
 };
 
 
@@ -36,15 +41,18 @@ VTX_OUT VS_Std3D(VTX_IN _in)
     
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
             
-    // Á¤Á¡ ¾È¿¡ µé¾îÀÖ´Â Normal ¹æÇâÀ» ¿ùµå·Î ÀÌµ¿½ÃÅ²´Ù.
-    // ¹æÇâº¤ÅÍ´Â »óÅÂÇà·ÄÀÇ 4Çà(ÀÌµ¿Á¤º¸) ¿¡ ¿µÇâ¹ŞÁö ¾Ê¾Æ¾ß ÇÏ±â ¶§¹®¿¡ 
-    // µ¿Â÷ÁÂÇ¥¸¦ 0 À¸·Î ¼³Á¤ÇØ¼­ Çà·ÄÀ» Àû¿ë½ÃÅ²´Ù.
+    // ì •ì  ì•ˆì— ë“¤ì–´ìˆëŠ” Normal ë°©í–¥ì„ ì›”ë“œë¡œ ì´ë™ì‹œí‚¨ë‹¤.
+    // ë°©í–¥ë²¡í„°ëŠ” ìƒíƒœí–‰ë ¬ì˜ 4í–‰(ì´ë™ì •ë³´) ì— ì˜í–¥ë°›ì§€ ì•Šì•„ì•¼ í•˜ê¸° ë•Œë¬¸ì— 
+    // ë™ì°¨ì¢Œí‘œë¥¼ 0 ìœ¼ë¡œ ì„¤ì •í•´ì„œ í–‰ë ¬ì„ ì ìš©ì‹œí‚¨ë‹¤.
     
-    // ±¤¿ø ¿¬»êÀº PixelShader ¿¡¼­, ViewSpace »ó¿¡¼­ ÁøÇà
-    // Á¤Á¡ ½¦ÀÌ´õ¿¡¼­´Â Á¤Á¡ÀÇ ViewSpace »ó¿¡¼­ÀÇ Normal °ú Position °ªÀ» PixelShader ·Î Àü´Ş
+    // ê´‘ì› ì—°ì‚°ì€ PixelShader ì—ì„œ, ViewSpace ìƒì—ì„œ ì§„í–‰
+    // ì •ì  ì‰ì´ë”ì—ì„œëŠ” ì •ì ì˜ ViewSpace ìƒì—ì„œì˜ Normal ê³¼ Position ê°’ì„ PixelShader ë¡œ ì „ë‹¬
+    output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV));
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV));
-    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
+    output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV));
     
+    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
+    output.vUV = _in.vUV;
     
     return output;
 }
@@ -53,43 +61,59 @@ VTX_OUT VS_Std3D(VTX_IN _in)
 float4 PS_Std3D(VTX_OUT _in) : SV_Target
 {
     float4 vOutColor = float4(0.f, 0.f, 0.f, 1.f);
-        
-    // ¹°Ã¼ »ö»ó
+         
+    // ë¬¼ì²´ ìƒ‰ìƒ
     float4 ObjectColor = float4(0.7f, 0.7f, 0.7f, 1.f);
     
-    // ±¤¿ø ¿¬»êÀÌ ViewSpace ¿¡¼­ ÁøÇàµÇ±â·Î Çß±â ¶§¹®¿¡,
-    // ±¤¿øÀÌ ÁøÀÔÇÏ´Â ¹æÇâµµ View °ø°£ ±âÁØÀ¸·Î º¯°æÇÔ
-    float3 vViewLightDir = normalize(mul(float4(g_LightDir, 0.f), g_matView).xyz);
+    // ì¶œë ¥ í…ìŠ¤ì³ê°€ ë°”ì¸ë”© ë˜ì–´ìˆë‹¤ë©´, í…ìŠ¤ì³ì˜ ìƒ‰ìƒì„ ì‚¬ìš©
+    if (g_btex_0)
+    {
+        ObjectColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+    }
    
-    // ViewSpace ¿¡¼­ ±¤¿øÀÇ ¹æÇâ°ú, ¹°Ã¼ Ç¥¸éÀÇ ¹ı¼±¸¦ ÀÌ¿ëÇØ¼­ ±¤¿øÀÇ ÁøÀÔ ¼¼±â(Diffuse) ¸¦ ±¸ÇÑ´Ù.
-    float LightPow = saturate(dot(_in.vViewNormal, -vViewLightDir));
-            
-    // ºûÀÌ Ç¥¸é¿¡ ÁøÀÔÇØ¼­ ¹İ»çµÇ´Â ¹æÇâÀ» ±¸ÇÑ´Ù.
-    float3 vReflect = vViewLightDir + 2 * dot(-vViewLightDir, _in.vViewNormal) * _in.vViewNormal;
-    vReflect = normalize(vReflect);
+    float3 vViewNormal = _in.vViewNormal;
     
-    // Ä«¸Ş¶ó°¡ ¹°Ã¼¸¦ ÇâÇÏ´Â ¹æÇâ
-    float3 vEye = normalize(_in.vViewPos);
-    
-    // ½Ã¼±º¤ÅÍ¿Í ¹İ»çº¤ÅÍ ³»Àû, ¹İ»ç±¤ÀÇ ¼¼±â
-    float ReflectPow = saturate(dot(-vEye, vReflect));
-    ReflectPow = pow(ReflectPow, 20.f);
-    
-    
-    // ÃÖÁ¾ »ö»ó == ¹°Ã¼ »ö x ±¤¿øÀÇ »ö x Ç¥¸éÀÇ ±¤¿ø ¼¼±â 
-    //           + ¹°Ã¼ »ö x È¯°æ±¤ ¼¼±â    
-    //           + ºûÀÇ »ö x ºûÀÇ ¹İ»ç±¤ °¨¼ÒºñÀ² x ¹İ»ç¼¼±â(Ä«¸Ş¶ó¶û ¹İ»çº¤ÅÍ°¡ ¼­·Î ¸¶ÁÖº¸´Â Á¤µµ)
-    vOutColor.xyz = ObjectColor.xyz * g_LightColor * LightPow
-                    + ObjectColor.xyz * g_LightColor * g_LightAmbient
-                    + g_LightColor * g_SpecularRatio * ReflectPow;
+    // ë…¸ë§ í…ìŠ¤ì³ê°€ ë°”ì¸ë”© ë˜ì–´ìˆë‹¤ë©´, ë…¸ë§ë§µí•‘ì„ ì§„í–‰
+    if (g_btex_1 && g_int_0)
+    {
+        // ìƒ‰ìƒì˜ ë²”ìœ„ëŠ” 0~1 ì´ì§€ë§Œ, ì €ì¥ëœ ê°’ì€ ë°©í–¥ë²¡í„°ë¥¼ ëœ»í•˜ê¸° ë•Œë¬¸ì— ì›ë˜ ì˜ë„í•œ ê°’ìœ¼ë¡œ ë°”ê¾¸ê¸° ìœ„í•´ì„œ
+        // ê°’ì˜ 0 ~ 1 ë²”ìœ„ë¥¼ -1.f ~ 1.f ë¡œ ë³€ê²½
+        float3 vNormal = g_tex_1.Sample(g_sam_0, _in.vUV).rgb;
+        vNormal = vNormal * 2.f - 1.f;
+        
+        // ì‚¬ìš©ì¤‘ì¸ í…ìŠ¤ì²˜ê°€ OpenGLìš©ì¼ ê²½ìš° Binormalì— '-'ë¥¼ ê³±í•´ì¤Œ
+        // í…ìŠ¤ì²˜ê°€ DirectXìš©ì´ë©´ '-' ì œê±°
+        float3x3 matRot =
+        {
+            _in.vViewTangent,
+            -_in.vViewBinormal,
+            _in.vViewNormal,
+        };
+        
+        vViewNormal = normalize(mul(vNormal.xyz, matRot));
+    }
+
+    tLightColor LightColor = (tLightColor) 0.f;
+
+    for (int i = 0; i < g_Light3DCount; ++i)
+    {
+        CalLight3D(i, _in.vViewPos, vViewNormal, LightColor);
+    }
+        
+    // ìµœì¢… ìƒ‰ìƒ == ë¬¼ì²´ ìƒ‰ x (ê´‘ì›ì˜ ìƒ‰ x í‘œë©´ì˜ ê´‘ì› ì„¸ê¸°)
+    //           + ë¬¼ì²´ ìƒ‰ x (í™˜ê²½ê´‘ ì„¸ê¸°)
+    //           + (ë¹›ì˜ ìƒ‰ x ë¹›ì˜ ë°˜ì‚¬ê´‘ ê°ì†Œë¹„ìœ¨ x ë°˜ì‚¬ì„¸ê¸°(ì¹´ë©”ë¼ë‘ ë°˜ì‚¬ë²¡í„°ê°€ ì„œë¡œ ë§ˆì£¼ë³´ëŠ” ì •ë„))
+    vOutColor.xyz = ObjectColor.xyz * LightColor.vColor.rgb
+                    + ObjectColor.xyz * LightColor.vAmbient.rgb
+                    + LightColor.vSpecular.rgb;
     
     return vOutColor;
 }
 
 
-// 3D ·Î ³Ñ¾î¿À¸é¼­ CULL_BACK ¸ğµå¸¦ »ç¿ëÇÑ´Ù.
-// ½Ã°è¹æÇâÀ¸·Î ÀÎµ¦½º Á¢±Ù¼ø¼­°¡ ¼³Á¤µÈ ¸éÀ» Á¤¸éÀÌ¶ó°í º¸°í
-// ¹İ´ë ¹æÇâ¿¡¼­ º¼¶§´Â Culling À» ÇÑ´Ù.
+// 3D ë¡œ ë„˜ì–´ì˜¤ë©´ì„œ CULL_BACK ëª¨ë“œë¥¼ ì‚¬ìš©í•œë‹¤.
+// ì‹œê³„ë°©í–¥ìœ¼ë¡œ ì¸ë±ìŠ¤ ì ‘ê·¼ìˆœì„œê°€ ì„¤ì •ëœ ë©´ì„ ì •ë©´ì´ë¼ê³  ë³´ê³ 
+// ë°˜ëŒ€ ë°©í–¥ì—ì„œ ë³¼ë•ŒëŠ” Culling ì„ í•œë‹¤.
 
 
 

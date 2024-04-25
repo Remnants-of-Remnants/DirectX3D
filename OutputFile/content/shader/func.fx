@@ -48,6 +48,64 @@ void CalLight2D(float3 _WorldPos, int _LightIdx, inout tLightColor _output)
     }    
 }
 
+void CalLight3D(int _LightIdx, float3 _vViewPos, float3 _vViewNormal, inout tLightColor _LightColor)
+{
+    // 광원의 정보를 확인
+    tLightInfo Light = g_Light3D[_LightIdx];
+    
+	// 광원이 물체를 향하는 방향벡터
+    float3 vViewLightDir = (float3) 0.f;
+
+    float fDistanceRatio = 1.f;
+
+    // Directional Light
+    if( 0 == Light.LightType)
+    {
+	    // 광원 연산이 ViewSpace 에서 진행되기로 했기 때문에,
+        // 광원이 진입하는 방향도 View 공간 기준으로 변경함
+        vViewLightDir = normalize(mul(float4(Light.vWorldDir, 0.f), g_matView).xyz);
+    }
+
+    // Point Light
+    else if ( 1 == Light.LightType)
+    {
+        float3 vLightViewPos = mul(float4(Light.vWorldPos, 1.f), g_matView).xyz;
+        vViewLightDir = _vViewPos - vLightViewPos;
+
+        // 광원과 물체 사이의 거리
+        float fDistance = length(vViewLightDir);
+        vViewLightDir = normalize(vViewLightDir);
+
+        // 광원 반경과 물체까지의 거리에 따른 빛의 세기
+        fDistanceRatio = saturate(1.f - (fDistance / Light.fRadius));
+    }
+
+    // Spot Light
+    else
+    {
+        
+    }
+
+     // ViewSpace 에서 광원의 방향과, 물체 표면의 법선를 이용해서 광원의 진입 세기(Diffuse) 를 구한다.
+    float LightPow = saturate(dot(_vViewNormal, -vViewLightDir));
+            
+    // 빛이 표면에 진입해서 반사되는 방향을 구한다.
+    float3 vReflect = vViewLightDir + 2 * dot(-vViewLightDir, _vViewNormal) * _vViewNormal;
+    vReflect = normalize(vReflect);
+    
+    // 카메라가 물체를 향하는 방향
+    float3 vEye = normalize(_vViewPos);
+    
+    // 시선벡터와 반사벡터 내적, 반사광의 세기
+    float ReflectPow = saturate(dot(-vEye, vReflect));
+    ReflectPow = pow(ReflectPow, 20.f);
+
+    _LightColor.vColor += Light.Color.vColor * LightPow * fDistanceRatio;
+    _LightColor.vAmbient += Light.Color.vAmbient;
+    _LightColor.vSpecular += Light.Color.vColor * Light.Color.vSpecular * ReflectPow * fDistanceRatio;
+
+
+}
 
 // ======
 // Random

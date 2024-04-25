@@ -29,6 +29,9 @@ CRenderMgr::~CRenderMgr()
 
 	if (nullptr != m_Light2DBuffer)
 		delete m_Light2DBuffer;
+
+	if (nullptr != m_Light3DBuffer)
+		delete m_Light3DBuffer;
 }
 
 void CRenderMgr::tick()
@@ -141,7 +144,7 @@ void CRenderMgr::render_debug()
 void CRenderMgr::UpdateData()
 {
 	g_global.g_Light2DCount = (int)m_vecLight2D.size();
-	//g_global.g_Light3DCount = (int)m_vecLight3D.size();
+	g_global.g_Light3DCount = (int)m_vecLight3D.size();
 
 	// 전역 데이터 업데이트
 	static CConstBuffer* pCB = CDevice::GetInst()->GetConstBuffer(CB_TYPE::GLOBAL_DATA);
@@ -168,11 +171,27 @@ void CRenderMgr::UpdateData()
 	vecLight2DInfo.clear();
 
 	// 3D 광원정보 업데이트
+	static vector<tLightInfo> vecLight3DInfo;
+
+	for (size_t i = 0; i < m_vecLight3D.size(); ++i)
+	{
+		const tLightInfo& info = m_vecLight3D[i]->GetLightInfo();
+		vecLight3DInfo.push_back(info);
+	}
+
+	if (!vecLight3DInfo.empty())
+	{
+		m_Light3DBuffer->SetData(vecLight3DInfo.data(), (UINT)vecLight3DInfo.size());
+	}
+	m_Light3DBuffer->UpdateData(12);
+
+	vecLight3DInfo.clear();
 }
 
 void CRenderMgr::Clear()
 {
 	m_vecLight2D.clear();
+	m_vecLight3D.clear();
 }
 
 void CRenderMgr::RegisterCamera(CCamera* _Cam, int _Idx)
