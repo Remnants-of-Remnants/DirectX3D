@@ -169,6 +169,13 @@ call CodeGen.exe</Command>
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="strAnim.h" />
+    <ClInclude Include="strFx.h" />
+    <ClInclude Include="strLevel.h" />
+    <ClInclude Include="strMtrl.h" />
+    <ClInclude Include="strPref.h" />
+    <ClInclude Include="strSnd.h" />
+    <ClInclude Include="strTex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBackgroundScript.cpp" />

@@ -10,9 +10,11 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PathMgr.cpp" />
+    <ClCompile Include="function.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="PathMgr.h" />
+    <ClInclude Include="function.h" />
   </ItemGroup>
 </Project>

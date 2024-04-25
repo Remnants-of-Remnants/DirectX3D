@@ -22,6 +22,27 @@
     <ClInclude Include="CMonsterScript.h">
       <Filter>Scripts</Filter>
     </ClInclude>
+    <ClInclude Include="strAnim.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strFx.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strLevel.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strMtrl.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strPref.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strSnd.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strTex.h">
+      <Filter>Default\GenString</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -55,6 +76,9 @@
     </Filter>
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{b42de7fc-e585-40cf-9c65-79e91e2b59d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\GenString">
+      <UniqueIdentifier>{46c15b8a-1132-401e-a7fa-a09bd70b5dff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
