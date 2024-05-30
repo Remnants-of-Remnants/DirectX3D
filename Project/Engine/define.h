@@ -239,6 +239,7 @@ enum class SCRIPT_PARAM
 	BOOL,
 	INT,
 	FLOAT,
+	STRING,
 	VEC2,
 	VEC3,
 	VEC4,
