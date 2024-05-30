@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "CRoRStateMachine.h"
-
+#include "CPlayerScript.h"
 
 
 

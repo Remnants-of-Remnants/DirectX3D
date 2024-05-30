@@ -10,21 +10,32 @@
 
 #include <Engine\CLogMgr.h>
 
+#include "CRoRStateMachine.h"
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
 	, m_Speed(500.f)
 {
 	AppendScriptParam("Player Speed", SCRIPT_PARAM::FLOAT, &m_Speed);
+	m_FSM = new CRoRStateMachine<CPlayerScript>(this, (UINT)PLAYER_STATE::END);
+
+	m_FSM->SetCallbacks((UINT)PLAYER_STATE::NORMAL, ToString(magic_enum::enum_name(PLAYER_STATE::NORMAL)), &CPlayerScript::NormalUpdate, &CPlayerScript::NormalBegin, &CPlayerScript::NormalEnd, nullptr);
+	m_FSM->SetCallbacks((UINT)PLAYER_STATE::ATTACK, ToString(magic_enum::enum_name(PLAYER_STATE::ATTACK)), &CPlayerScript::AttackUpdate, &CPlayerScript::AttackBegin, &CPlayerScript::AttackEnd, nullptr);
 }
 
 CPlayerScript::~CPlayerScript()
 {
-
+	if (nullptr != m_FSM)
+	{
+		delete m_FSM;
+		m_FSM = nullptr;
+	}
 }
 
+static int state = 0;
 void CPlayerScript::begin()
 {
+	m_FSM->Begin();
 	//Ptr<CTexture> pAltasTex = CAssetMgr::GetInst()->Load<CTexture>(L"texture\\link.png", L"texture\\link.png");
 	//Animator2D()->Create(L"IDLE_LEFT", pAltasTex, Vec2(0.f, 130.f), Vec2(120.f, 130.f), Vec2(0.f, 0.f), Vec2(200.f, 200.f), 3, 10);
 	//Animator2D()->Create(L"IDLE_RIGHT", pAltasTex, Vec2(0.f, 390.f), Vec2(120.f, 130.f), Vec2(0.f, 0.f), Vec2(200.f, 200.f), 3, 10);
@@ -38,10 +49,15 @@ void CPlayerScript::begin()
 
 	//m_Missile = CAssetMgr::GetInst()->FindAsset<CPrefab>(L"MissilePrefab");
 	//m_Missile = CAssetMgr::GetInst()->Load<CPrefab>(L"prefab\\missile.pref", L"prefab\\missile.pref");
+	AppendScriptParam("CurState", SCRIPT_PARAM::INT, (void*)&state);
 }
 
 void CPlayerScript::tick()
 {
+	m_FSM->Update();
+
+	state = m_FSM->GetCurState();
+
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRotation();
 
@@ -121,8 +137,6 @@ void CPlayerScript::tick()
 
 	//GamePlayStatic::DrawDebugRect(Vec3(0.f, 0.f, 0.f), Vec3(200.f, 200.f, 1.f), Vec3(0.f, 0.f, 0.f), Vec3(1.f, 1.f, 1.f), true, 20);
 	//GamePlayStatic::DrawDebugCircle(Vec3(0.f, 0.f, 0.f), 200.f, Vec3(0.f, 1.f, 1.f), true);
-
-
 }
 
 void CPlayerScript::BeginOverlap(CCollider2D* _Collider
@@ -133,7 +147,6 @@ void CPlayerScript::BeginOverlap(CCollider2D* _Collider
 
 void CPlayerScript::Overlap(CCollider2D* _Collider, CGameObject* _OtherObj, CCollider2D* _OtherCollider)
 {
-	
 }
 
 void CPlayerScript::EndOverlap(CCollider2D* _Collider, CGameObject* _OtherObj, CCollider2D* _OtherCollider)
@@ -148,4 +161,49 @@ void CPlayerScript::SaveToFile(FILE* _File)
 void CPlayerScript::LoadFromFile(FILE* _File)
 {
 	fread(&m_Speed, sizeof(float), 1, _File);
+}
+
+void CPlayerScript::NormalBegin()
+{
+}
+
+int CPlayerScript::NormalUpdate()
+{
+	if (KEY_TAP(KEY::C))
+	{
+		return (UINT)PLAYER_STATE::ATTACK;
+	}
+	else
+	{
+		return (UINT)PLAYER_STATE::NORMAL;
+	}
+}
+
+void CPlayerScript::NormalEnd()
+{
+}
+
+static float Att_Acctime = 0.f;
+static const float Att_duration = 1.f;
+
+void CPlayerScript::AttackBegin()
+{
+	Att_Acctime = 0.f;
+}
+
+int CPlayerScript::AttackUpdate()
+{
+	Att_Acctime += DT;
+	if (Att_duration < Att_Acctime)
+	{
+		return (UINT)PLAYER_STATE::NORMAL;
+	}
+	else
+	{
+		return (UINT)PLAYER_STATE::ATTACK;
+	}
+}
+
+void CPlayerScript::AttackEnd()
+{
 }

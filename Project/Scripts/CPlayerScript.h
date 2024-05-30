@@ -1,6 +1,16 @@
-#pragma once
+﻿#pragma once
 
 #include <Engine/CScript.h>
+
+enum class PLAYER_STATE
+{
+    NORMAL,
+    ATTACK,
+    END,
+};
+
+template <typename T>
+class CRoRStateMachine;
 
 class CPlayerScript :
     public CScript
@@ -8,6 +18,7 @@ class CPlayerScript :
 private:
     Ptr<CPrefab>    m_Missile;
     float           m_Speed;
+    CRoRStateMachine<CPlayerScript>* m_FSM;
 
 public:
     virtual void begin() override;
@@ -21,6 +32,13 @@ public:
     virtual void SaveToFile(FILE* _File) override;
     virtual void LoadFromFile(FILE* _File) override;
     CLONE(CPlayerScript);
+
+    void NormalBegin();
+    int NormalUpdate();
+    void NormalEnd();
+    void AttackBegin();
+    int AttackUpdate();
+    void AttackEnd();
 public:
     CPlayerScript();
     ~CPlayerScript();
