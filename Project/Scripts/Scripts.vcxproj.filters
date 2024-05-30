@@ -34,6 +34,9 @@
     <ClInclude Include="CCameraEffect.h">
       <Filter>Scripts\Manager\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="CRoRStateMachine.h">
+      <Filter>RoRStateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -69,6 +72,9 @@
     <ClCompile Include="CCameraEffect.cpp">
       <Filter>Scripts\Manager\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="CRoRStateMachine.cpp">
+      <Filter>RoRStateMachine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -94,6 +100,9 @@
     </Filter>
     <Filter Include="Scripts\Manager\Time">
       <UniqueIdentifier>{9b5c2bf2-2681-42e9-b790-8b4aba881373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RoRStateMachine">
+      <UniqueIdentifier>{c0ca3353-f85f-4d83-9ed1-64fe4632a0be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
