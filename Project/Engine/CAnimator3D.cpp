@@ -53,7 +53,7 @@ void CAnimator3D::finaltick()
 {
 	m_dCurTime = 0.f;
 	// 현재 재생중인 Clip 의 시간을 진행한다.
-	m_vecClipUpdateTime[m_iCurClip] += DT;
+	m_vecClipUpdateTime[m_iCurClip] += DT_ENGINE;
 
 	if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
 	{

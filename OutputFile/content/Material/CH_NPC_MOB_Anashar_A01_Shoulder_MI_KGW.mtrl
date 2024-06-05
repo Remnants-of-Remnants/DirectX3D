@@ -1,0 +1,73 @@
+[MtrlConst]
+[IntArr]
+0 0 0 0 
+[FloatArr]
+0 0 0 0 
+[Vec2Arr]
+0 0
+0 0
+0 0
+0 0
+[Vec4Arr]
+0 0 0 0
+0 0 0 0
+0 0 0 0
+0 0 0 0
+[MatrixArr]
+1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 0 0 0
+0 1 0 0
+0 0 1 0
+0 0 0 1
+
+[Textures]
+[AssetExist]
+1
+[Key]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_D_KGW.tga
+[Path]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_D_KGW.tga
+[AssetExist]
+1
+[Key]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_N_KGW.tga
+[Path]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_N_KGW.tga
+[AssetExist]
+1
+[Key]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_SP_KGW.tga
+[Path]
+texture\FBXTexture\CH_NPC_MOB_Anashar_A01_Shoulder_SP_KGW.tga
+[AssetExist]
+0
+[AssetExist]
+0
+[AssetExist]
+0
+[AssetExist]
+0
+[AssetExist]
+0
+[AssetExist]
+0
+[AssetExist]
+0
+[MtrlShader]
+[AssetExist]
+1
+[Key]
+Std3D_DeferredShader
+[Path]
+
