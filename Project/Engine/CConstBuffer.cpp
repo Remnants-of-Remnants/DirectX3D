@@ -31,7 +31,6 @@ int CConstBuffer::Create(UINT _ElementSize, UINT _ElementCount)
 	if (FAILED(DEVICE->CreateBuffer(&m_Desc, nullptr, m_CB.GetAddressOf())))
 	{
 		MessageBox(nullptr, L"상수 버퍼 생성 실패", L"TestInit 오류", MB_OK);
-		assert(nullptr);
 		return E_FAIL;
 	}
 
