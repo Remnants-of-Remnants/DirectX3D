@@ -229,6 +229,10 @@
     <ClInclude Include="CMeshData.h">
       <Filter>06. Asset\MeshData</Filter>
     </ClInclude>
+    <ClInclude Include="CAnimator3D.h">
+      <Filter>08. Component\05. Animator3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimation3DShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -438,6 +442,10 @@
     <ClCompile Include="CMeshData.cpp">
       <Filter>06. Asset\MeshData</Filter>
     </ClCompile>
+    <ClCompile Include="CAnimator3D.cpp">
+      <Filter>08. Component\05. Animator3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimation3DShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -650,6 +658,9 @@
     <Filter Include="Module\FBXLoader">
       <UniqueIdentifier>{81e92f5f-7347-4b4b-9815-eb45c0544dfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Component\05. Animator3D">
+      <UniqueIdentifier>{a5b1d60b-9a44-431d-91fc-646d9bac7dd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -722,6 +733,9 @@
     </FxCompile>
     <FxCompile Include="weightmap.fx">
       <Filter>ShaderCode\03. Compute\LandScape\WeightMap</Filter>
+    </FxCompile>
+    <FxCompile Include="animation.fx">
+      <Filter>ShaderCode\02. Render\3DShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -29,6 +29,7 @@ public:
     inline class CStateMachine* StateMachine() { return GetOwner()->StateMachine();}
     inline class CCollider2D* Collider2D() { return GetOwner()->Collider2D();}
     inline class CAnimator2D* Animator2D() { return GetOwner()->Animator2D();}
+    inline class CAnimator3D* Animator3D() { return GetOwner()->Animator3D(); }
     inline class CLight2D* Light2D() { return GetOwner()->Light2D();}
     inline class CLight3D* Light3D() { return GetOwner()->Light3D();}
     inline class CTileMap* TileMap() { return GetOwner()->TileMap();}
