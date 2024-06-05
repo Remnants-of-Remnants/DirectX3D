@@ -233,6 +233,30 @@
       <Filter>08. Component\05. Animator3D</Filter>
     </ClInclude>
     <ClInclude Include="CAnimation3DShader.h" />
+    <ClInclude Include="strAnim.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strFx.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strLevel.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strMtrl.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strPref.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strSnd.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strTex.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
+    <ClInclude Include="strTxt.h">
+      <Filter>01. Header\GenString</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
