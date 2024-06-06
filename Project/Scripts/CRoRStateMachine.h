@@ -20,7 +20,7 @@ private:
 	public:
 		StateManager(CRoRStateMachine* _Outer) :StateManager() { m_Outer = _Outer; };
 		~StateManager() {};
-		int GetPrevStateInt() { return m_CurState; }
+		int GetPrevStateInt() { return m_PrevState; }
 		int GetCurStateInt() { return m_CurState; }
 		void SetCurState(int _ToState)
 		{
