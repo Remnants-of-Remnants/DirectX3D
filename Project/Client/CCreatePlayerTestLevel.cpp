@@ -135,7 +135,7 @@ void CCreatePlayerTestLevel::CreateTempLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 
-		pMeshData = CAssetMgr::GetInst()->LoadFBX(L"fbx\\shiroko.fbx");
+		pMeshData = CAssetMgr::GetInst()->LoadFBX(L"fbx\\serika_Merge.fbx");
 		//pMeshData = CAssetMgr::GetInst()->FindAsset<CMeshData>(L"meshdata\\mika.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(pMeshData->GetKey());

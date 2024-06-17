@@ -22,6 +22,7 @@ CAnimator3D::CAnimator3D()
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, m_iStartFrame(0), m_iEndFrame(120)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
 }
@@ -38,6 +39,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, m_iNextFrameIdx(_origin.m_iNextFrameIdx)
 	, m_fRatio(_origin.m_fRatio)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, m_iStartFrame(40), m_iEndFrame(96)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
 }
@@ -55,20 +57,59 @@ void CAnimator3D::finaltick()
 	// 현재 재생중인 Clip 의 시간을 진행한다.
 	m_vecClipUpdateTime[m_iCurClip] += DTd_ENGINE;
 
-	if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+	if (KEY_TAP(M))
 	{
+		m_iStartFrame = 0;
+		m_iEndFrame = 120;
 		m_vecClipUpdateTime[m_iCurClip] = 0.f;
 	}
+	else if (KEY_TAP(N))
+	{
+		m_iStartFrame = 0;
+		m_iEndFrame = 39;
+		m_vecClipUpdateTime[m_iCurClip] = 0.f;
+	}
+	else if (KEY_TAP(B))
+	{
+		m_iStartFrame = 40;
+		m_iEndFrame = 96;
+		m_vecClipUpdateTime[m_iCurClip] = (double)m_iStartFrame / (double)m_iFrameCount;
+	}
+	else if (KEY_TAP(V))
+	{
+		m_iStartFrame = 97;
+		m_iEndFrame = 120;
+		m_vecClipUpdateTime[m_iCurClip] = (double)m_iStartFrame / (double)m_iFrameCount;
+	}
 
+    double startTime = (double)m_iStartFrame / (double)m_iFrameCount;
+	double endTime = (double)m_iEndFrame / (double)m_iFrameCount;
+	double segmentTimeLength = endTime - startTime;
+
+	if (m_vecClipUpdateTime[m_iCurClip] >= endTime)
+	{
+		m_vecClipUpdateTime[m_iCurClip] = startTime;
+	}
+	//if (m_vecClipUpdateTime[m_iCurClip] >= m_pVecClip->at(m_iCurClip).dTimeLength)
+	//{
+	//	m_vecClipUpdateTime[m_iCurClip] = 0.f;
+	//}
 	m_dCurTime = m_pVecClip->at(m_iCurClip).dStartTime + m_vecClipUpdateTime[m_iCurClip];
-
 	// 현재 프레임 인덱스 구하기
 	double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
 	m_iFrameIdx = (int)(dFrameIdx);
 
-	// 다음 프레임 인덱스
-	if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
-		m_iNextFrameIdx = m_iFrameIdx;	// 끝이면 현재 인덱스를 유지
+	// 시작 및 끝 프레임 범위 내에서 반복 재생
+	if (m_iFrameIdx >= m_iEndFrame - 1)
+	{
+		if (m_iFrameIdx >= m_pVecClip->at(m_iCurClip).iEndFrame - 1)
+			m_iNextFrameIdx = m_iFrameIdx = m_iEndFrame - 2;
+		else
+			m_iNextFrameIdx = m_iFrameIdx = m_iEndFrame - 1;
+	}
+	//// 다음 프레임 인덱스
+	//if (m_iFrameIdx >= m_pVecClip->at(0).iFrameLength - 1)
+	//	m_iNextFrameIdx = m_iFrameIdx = m_pVecClip->at(0).iFrameLength - 2; // 끝이면 현재 인덱스를 유지
 	else
 		m_iNextFrameIdx = m_iFrameIdx + 1;
 
