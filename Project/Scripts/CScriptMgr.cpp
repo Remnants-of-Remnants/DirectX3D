@@ -75,6 +75,7 @@
 #include "CSmokeScript.h"
 #include "CSpawnPhysX.h"
 #include "CTutorialEndingEvent.h"
+#include "CCubePushScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -152,6 +153,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CSmokeScript");
 	_vec.push_back(L"CSpawnPhysX");
 	_vec.push_back(L"CTutorialEndingEvent");
+	_vec.push_back(L"CCubePushScript");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -304,6 +306,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CSpawnPhysX;
 	if (L"CTutorialEndingEvent" == _strScriptName)
 		return new CTutorialEndingEvent;
+	if (L"CCubePushScript" == _strScriptName)
+		return new CCubePushScript;
 	return nullptr;
 }
 
@@ -532,6 +536,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::TUTORIALENDINGEVENT:
 		return new CTutorialEndingEvent;
+		break;
+	case (UINT)SCRIPT_TYPE::CUBEPUSHSCRIPT:
+		return new CCubePushScript;
 		break;
 	}
 	return nullptr;
@@ -835,6 +842,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::TUTORIALENDINGEVENT:
 		return L"CTutorialEndingEvent";
+		break;
+
+	case SCRIPT_TYPE::CUBEPUSHSCRIPT:
+		return L"CCubePushScript";
 		break;
 
 	}

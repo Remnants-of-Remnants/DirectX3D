@@ -25,7 +25,7 @@ CBossScript::CBossScript()
 	, m_EXsDuration(0.f)
 	, m_ActiveAttack(false)
 	, m_ActiveEXs(false)
-	, m_EXsType(0)
+	, m_EXsType(1)
 	, m_Target(nullptr)
 	, m_ArrMissile{}
 	, m_ArrShield{}

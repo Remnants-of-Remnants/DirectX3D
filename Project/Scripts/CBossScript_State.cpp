@@ -140,7 +140,7 @@ void CBossScript::EXs1End()
 
 void CBossScript::EXs2Begin()
 {
-	Animator3D()->Play((int)BOSS_STATE::EXs2, 0);
+	Animator3D()->Play((int)BOSS_STATE::EXs2, 0, 5.f);
 }
 
 int CBossScript::EXs2Update()
