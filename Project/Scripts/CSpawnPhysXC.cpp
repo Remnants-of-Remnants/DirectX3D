@@ -1,13 +1,13 @@
 ﻿#include "pch.h"
-#include "CSpawnPhysX.h"
+#include "CSpawnPhysXC.h"
 
 #include "Engine\CKeyMgr.h"
 #include "CSpawnSpotScript.h"
-void CSpawnPhysX::begin()
+void CSpawnPhysXC::begin()
 {
 }
 
-void CSpawnPhysX::tick()
+void CSpawnPhysXC::tick()
 {
 	auto			  vecscript = GetOwner()->GetScripts();
 	CSpawnSpotScript* SSS		= nullptr;
@@ -20,18 +20,18 @@ void CSpawnPhysX::tick()
 		}
 	}
 
-	if (KEY_TAP(KEY::M) && nullptr != SSS)
+	if (KEY_TAP(KEY::N) && nullptr != SSS)
 	{
 		SSS->RegisterObject();
 		SSS->SpawnObject();
 	}
 }
 
-CSpawnPhysX::CSpawnPhysX()
-	: CScript((UINT)SCRIPT_TYPE::SPAWNPHYSX)
+CSpawnPhysXC::CSpawnPhysXC()
+	: CScript((UINT)SCRIPT_TYPE::SPAWNPHYSXC)
 {
 }
 
-CSpawnPhysX::~CSpawnPhysX()
+CSpawnPhysXC::~CSpawnPhysXC()
 {
 }

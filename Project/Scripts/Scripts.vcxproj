@@ -248,6 +248,7 @@ call ScriptsCopy.bat</Command>
     <ClInclude Include="CShootingSystem_DroidAR.h" />
     <ClInclude Include="CSmokeScript.h" />
     <ClInclude Include="CSpawnPhysX.h" />
+    <ClInclude Include="CSpawnPhysXC.h" />
     <ClInclude Include="CStartLightTex.h" />
     <ClInclude Include="CStartTex.h" />
     <ClInclude Include="CTitleTex.h" />
@@ -377,6 +378,7 @@ call ScriptsCopy.bat</Command>
     <ClCompile Include="CShootingSystem_DroidAR.cpp" />
     <ClCompile Include="CSmokeScript.cpp" />
     <ClCompile Include="CSpawnPhysX.cpp" />
+    <ClCompile Include="CSpawnPhysXC.cpp" />
     <ClCompile Include="CStartLightTex.cpp" />
     <ClCompile Include="CStartTex.cpp" />
     <ClCompile Include="CTitleTex.cpp" />

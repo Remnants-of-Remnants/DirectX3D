@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Engine\CScript.h"
-class CSpawnPhysX : public CScript
+class CSpawnPhysXC : public CScript
 {
 private:
 public:
@@ -8,7 +8,7 @@ public:
 	virtual void tick() override;
 
 public:
-	CLONE(CSpawnPhysX);
-	CSpawnPhysX();
-	~CSpawnPhysX();
+	CLONE(CSpawnPhysXC);
+	CSpawnPhysXC();
+	~CSpawnPhysXC();
 };

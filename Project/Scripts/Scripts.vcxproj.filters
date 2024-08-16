@@ -361,6 +361,9 @@
     <ClInclude Include="CBladeAfterImage.h">
       <Filter>Scripts\Boss\BladeAfterImage</Filter>
     </ClInclude>
+    <ClInclude Include="CSpawnPhysXC.h">
+      <Filter>Scripts\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -728,6 +731,9 @@
     </ClCompile>
     <ClCompile Include="CBladeAfterImage.cpp">
       <Filter>Scripts\Boss\BladeAfterImage</Filter>
+    </ClCompile>
+    <ClCompile Include="CSpawnPhysXC.cpp">
+      <Filter>Scripts\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
