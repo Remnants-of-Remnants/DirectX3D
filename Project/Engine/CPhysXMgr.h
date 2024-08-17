@@ -46,7 +46,7 @@ private:
 	class RoRCollisionCallback* gCollisionCalback = nullptr;
 	vector<FlagActorColInfo>	m_vecTriggerColInfo;
 	float						m_TimeStep		 = 1.f / 120.f;
-	float						m_fGravityMul	 = 10.f;
+	float						m_fGravityMul	 = 2.f;
 	const float					m_fGravity		 = -9.81f;
 	float						m_fContactOffset = 0.02f;
 	float						m_fLestOffset	 = 0.05f;

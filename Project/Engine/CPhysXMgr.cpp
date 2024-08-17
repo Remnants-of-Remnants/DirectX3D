@@ -451,8 +451,8 @@ void CPhysXMgr::init()
 	sceneDesc.staticKineFilteringMode = PxPairFilteringMode::eKEEP;
 	// sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
 
-	gScene = gPhysics->createScene(sceneDesc);
-	gMaterial = gPhysics->createMaterial(7.5f, 7.5f, 0.2f); // (정지 마찰 계수, 동적 마찰 계수, 반발 계수)
+	gScene	  = gPhysics->createScene(sceneDesc);
+	gMaterial = gPhysics->createMaterial(.5f, .5f, 0.4f); // (정지 마찰 계수, 동적 마찰 계수, 반발 계수)
 
 	gCollisionCalback = new RoRCollisionCallback;
 	gScene->setSimulationEventCallback(gCollisionCalback);
