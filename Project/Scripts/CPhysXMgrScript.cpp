@@ -2,6 +2,7 @@
 #include "CPhysXMgrScript.h"
 
 #include <Engine\CPhysXMgr.h>
+#include "Engine\CRenderMgr.h"
 
 CPhysXMgrScript::CPhysXMgrScript()
 	: CScript((UINT)SCRIPT_TYPE::PHYSXMGRSCRIPT)
@@ -33,7 +34,7 @@ void CPhysXMgrScript::begin()
 
 	AppendScriptParam("[Script]raycol_result", SCRIPT_PARAM::BOOL, (void*)&iscontact, 0.f, 0.f, true);
 	AppendScriptParam("[Script]raycol_obj", SCRIPT_PARAM::STRING, (void*)&strobj, 0.f, 0.f, true);
-	// AppendScriptParam("[Script]raycol_pos", SCRIPT_PARAM::VEC3, (void*)&contactpos, 0.f, 0.f, true);
+	AppendScriptParam("[Script]raycol_pos", SCRIPT_PARAM::VEC3, (void*)&contactpos, 0.f, 0.f, true);
 
 	// AppendScriptParam("[Script]T:ViewPortRC/F:PointRC", SCRIPT_PARAM::BOOL, (void*)&bTypeViewPortRC);
 }
@@ -49,19 +50,28 @@ void CPhysXMgrScript::tick()
 	//													(UINT)LAYER::LAYER_RAYCAST, mask);
 	// }
 	// else
-	//{
-	// 뷰포트 Raycast
-	// int mask  = RayCastDebugFlag::AllInvisible;
-	// iscontact = CPhysXMgr::GetInst()->ViewPortRaycast(hitinfo, mask);
-	// }
+	{
+		// 뷰포트 Raycast
+		int mask  = RayCastDebugFlag::EndPointVisible;
+		iscontact = CPhysXMgr::GetInst()->ViewPortRaycast(hitinfo, (UINT)LAYER::LAYER_MONSTER, mask);
+	}
 
-	// if (true == iscontact)
-	//{
-	//	strobj	   = ToString(hitinfo.pOtherObj->GetName());
-	//	contactpos = hitinfo.vHitPos;
-	// }
-	// else
-	//{
-	//	strobj = "";
-	// }
+	if (true == iscontact)
+	{
+		auto CamPos	  = CRenderMgr::GetInst()->GetMainCam()->Transform()->GetWorldPos();
+		Vec3 ShootDir = hitinfo.vHitPos - CamPos;
+
+		strobj	   = ToString(hitinfo.pOtherObj->GetName());
+		contactpos = hitinfo.vHitPos;
+		if (KEY_TAP(KEY::LBTN))
+		{
+			hitinfo.pOtherObj->PhysX()->applyBulletImpact(
+				PxVec3(ShootDir.x, ShootDir.y, ShootDir.z), 3.f,
+				PxVec3(hitinfo.vHitPos.x, hitinfo.vHitPos.y, hitinfo.vHitPos.z));
+		}
+	}
+	else
+	{
+		strobj = "";
+	}
 }
