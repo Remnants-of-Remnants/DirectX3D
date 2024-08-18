@@ -39,15 +39,26 @@ VS_SKYBOX_OUT VS_SkyBox(VS_SKYBOX_IN _in)
     return output;
 }
 
-float4 PS_SkyBox(VS_SKYBOX_OUT _in) : SV_Target
+struct PS_OUT
 {
-    float4 vOutColor = float4(0.2f, 0.2f, 1.f, 1.f);
+    float4 vColor : SV_Target0;
+    float4 vPosition : SV_Target1;
+    float4 vNormal : SV_Target2;
+    float4 vEmissive : SV_Target3;
+    float4 vRelativeLuminance : SV_Target4;
+};
+
+PS_OUT PS_SkyBox(VS_SKYBOX_OUT _in) : SV_Target
+{
+    PS_OUT output = (PS_OUT) 0.f;
+    
+    //float4 vOutColor = float4(0.2f, 0.2f, 1.f, 1.f);
     
     if (0 == g_int_0)
     {
         if (g_btex_0)
         {
-            vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+            output.vEmissive = g_tex_0.Sample(g_sam_0, _in.vUV);
         }
     }
     else if (1 == g_int_0)
@@ -55,11 +66,42 @@ float4 PS_SkyBox(VS_SKYBOX_OUT _in) : SV_Target
         if (g_btexcube_0)
         {
             float3 vUV = normalize(_in.vUV_Dir);
-            vOutColor = g_texcube_0.Sample(g_sam_0, vUV);
+            output.vEmissive = g_texcube_0.Sample(g_sam_0, vUV);
         }
     }
     
-    return vOutColor;
+    if (g_iBloomUse)
+    {
+        const static float3 vRLWeight = float3(0.2126f, 0.7152f, 0.0722f);
+        float4 vBloomColor = g_BloomInfo[0].vBloomColor;
+        float fThreshold = g_BloomInfo[0].fThreshold;
+        //const static float4 vBloomColor = float4(1.f, 1.f, 1.f, 1.f);
+        //float fThreshold = 0.8f;
+
+        float brightness = dot(output.vEmissive.rgb, vRLWeight);
+        if (brightness > fThreshold)
+        {
+            if (0 != g_BloomInfo[0].bUseOriginalColor)
+            {
+                output.vRelativeLuminance.rgb = output.vEmissive.rgb;
+                output.vRelativeLuminance.a = 1.f;
+            }
+            else
+            {
+                output.vRelativeLuminance = vBloomColor;
+            }
+        }
+        else
+        {
+            output.vRelativeLuminance = float4(0.f, 0.f, 0.f, 1.f);
+        }
+    }
+    else
+    {
+        output.vRelativeLuminance = float4(0.f, 0.f, 0.f, 1.f);
+    }
+    
+    return output;
 }
 
 #endif

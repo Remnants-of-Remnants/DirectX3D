@@ -94,12 +94,27 @@ void CSkyBox::UpdateData()
 		GetMaterial(0)->SetTexParam(TEX_PARAM::TEXCUBE_0, m_CubeTex);
 	}
 
+	// 스크립트 UD
+	vector<CScript*> vecScript = GetOwner()->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->UpdateData();
+	}
+
 	GetMaterial(0)->UpdateData();
 }
 
+#include "CScript.h"
 void CSkyBox::render()
 {
 	UpdateData();
 
 	GetMesh()->render(0);
+
+	// 스크립트 CD
+	vector<CScript*> vecScript = GetOwner()->GetScripts();
+	for (int i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->Clear();
+	}
 }
