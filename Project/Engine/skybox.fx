@@ -25,7 +25,7 @@ VS_SKYBOX_OUT VS_SkyBox(VS_SKYBOX_IN _in)
     float3 vLocalPos = _in.vPos * 2.f;
     
     // 회전만 적용
-    vLocalPos = mul(float4(vLocalPos, 0.f), g_matWorld).xyz;
+    vLocalPos = mul(float4(vLocalPos, 1.f), g_matWorld).xyz;
     
     float3 vViewPos = mul(float4(vLocalPos, 0.f), g_matView);
     float4 vPosition = mul(float4(vViewPos, 1.f), g_matProj);
@@ -36,6 +36,10 @@ VS_SKYBOX_OUT VS_SkyBox(VS_SKYBOX_IN _in)
     {
         output.vUV_Dir = _in.vPos;
         vPosition.z -= 0.01f; // 깊이 값에 작은 오프셋 추가
+    }
+    else
+    {
+        vPosition.z -= 0.02f; // 깊이 값에 작은 오프셋 추가
     }
     
     output.vPosition = vPosition;
