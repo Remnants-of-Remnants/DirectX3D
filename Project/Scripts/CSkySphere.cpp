@@ -44,9 +44,27 @@ void CSkySphere::begin()
 {
 }
 
-static float RatioDown = .14f;
-static float RatioUp   = .60f;
-static float DTMul	   = 5.f;
+static float  RatioDown	 = .14f;
+static float  RatioUp	 = .60f;
+static float  DTMul		 = 1.f;
+static string strCurTime = "";
+
+#include <sstream>
+std::string GetFormattedTime(float CurTime)
+{
+	// 0.f ~ 1.f 범위를 0 ~ 24로 변환
+	float hour = CurTime * 24.0f;
+
+	// 시간과 분을 계산
+	int hours	= static_cast<int>(hour);
+	int minutes = static_cast<int>((hour - hours) * 60);
+
+	// 문자열 스트림을 사용하여 포맷팅
+	std::ostringstream oss;
+	oss << std::setw(2) << std::setfill('0') << hours << ":" << std::setw(2) << std::setfill('0') << minutes;
+
+	return oss.str();
+}
 
 #include "Engine\CRenderMgr.h"
 void CSkySphere::tick()
@@ -59,6 +77,13 @@ void CSkySphere::tick()
 	{
 		return;
 	}
+	if (m_TargetTime == m_CurTime)
+		return;
+
+	m_CurTime = RoRMath::Lerp(m_CurTime, m_TargetTime, DT * DTMul);
+
+	if (abs(m_TargetTime - m_CurTime) < 0.001f)
+		m_CurTime = m_TargetTime;
 
 	m_Skybox_Day->m_fAlpha;
 
@@ -79,7 +104,7 @@ void CSkySphere::tick()
 	m_Skybox_Night->Transform()->SetRelativeRotation(vNightRot);
 
 	// DirLightRot Set
-	fRot		= XM_PI / 8.f - (XM_PI * 4 * m_CurTime);
+	fRot		= XM_PI / 8.f + (XM_PI * 4 * m_CurTime);
 	auto vDLRot = m_DirectionalLight->Transform()->GetRelativeRotation();
 	vDLRot.y	= fRot;
 	m_DirectionalLight->Transform()->SetRelativeRotation(vDLRot);
@@ -89,6 +114,7 @@ void CSkySphere::tick()
 	fAmbient /= 255.f;
 	m_DirectionalLight->SetAmbient(Vec3(fAmbient, fAmbient, fAmbient));
 
+	strCurTime = GetFormattedTime(m_CurTime);
 	// MergeRatio 수정
 	// auto& Refatio = CRenderMgr::GetInst()->m_GlobalBloomInfo.Ratio;
 	// m_MergeRatioIncline ? Refatio = RoRMath::Lerp(Refatio, RatioUp, DT * DTMul)
@@ -102,7 +128,9 @@ void CSkySphere::tick()
 CSkySphere::CSkySphere()
 	: CScript((UINT)SCRIPT_TYPE::SKYSPHERE)
 {
-	AppendScriptParam("CurTime", SCRIPT_PARAM::FLOAT, &(m_CurTime), 0.f, 1.f, false, "", true);
+	AppendScriptParam("strCurTime", SCRIPT_PARAM::STRING, &(strCurTime), 0.f, 1.f, true, "", true);
+	AppendScriptParam("NormalTargetTime", SCRIPT_PARAM::FLOAT, &(m_TargetTime), 0.f, 1.f, false, "", true);
+	AppendScriptParam("NormalCurTime", SCRIPT_PARAM::FLOAT, &(m_CurTime), 0.f, 1.f, true, "", true);
 	AppendScriptParam("DTMul", SCRIPT_PARAM::FLOAT, &(DTMul), 0.f, 1.f, false, "", true);
 	AppendScriptParam("RatioDown", SCRIPT_PARAM::FLOAT, &(RatioDown), 0.f, 1.f, false, "", true);
 	AppendScriptParam("RatioUp", SCRIPT_PARAM::FLOAT, &(RatioUp), 0.f, 1.f, false, "", true);
