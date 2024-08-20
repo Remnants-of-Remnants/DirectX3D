@@ -35,7 +35,8 @@ void SkyBoxUI::render_update()
 
 	ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(1.f, 1.f, 1.f, 1.f));
 
-	static int iSkyBoxType = (UINT)(GetTargetObject()->SkyBox()->m_SkyBoxType);
+	static int iSkyBoxType;
+	iSkyBoxType = (UINT)(GetTargetObject()->SkyBox()->m_SkyBoxType);
 
 	if (ImGui::RadioButton("Sphere Type", &iSkyBoxType, 0))
 	{
