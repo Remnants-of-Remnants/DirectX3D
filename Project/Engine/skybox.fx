@@ -30,11 +30,12 @@ VS_SKYBOX_OUT VS_SkyBox(VS_SKYBOX_IN _in)
     float3 vViewPos = mul(float4(vLocalPos, 0.f), g_matView);
     float4 vPosition = mul(float4(vViewPos, 1.f), g_matProj);
     vPosition.z = vPosition.w;
-            
+    
     // Skybox 가 Cube 타입인 경우
     if (1 == g_int_0)
     {
         output.vUV_Dir = _in.vPos;
+        vPosition.z -= 0.01f; // 깊이 값에 작은 오프셋 추가
     }
     
     output.vPosition = vPosition;
