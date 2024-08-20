@@ -40,4 +40,5 @@ public:
 	~CSkyBox();
 
 	friend class SkyBoxUI;
+	friend class CSkySphere;
 };

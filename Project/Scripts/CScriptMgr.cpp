@@ -107,6 +107,7 @@
 #include "CTutVictoryTex.h"
 #include "CFadeUIScript.h"
 #include "CBladeAfterImage.h"
+#include "CSkySphere.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -216,6 +217,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CTutVictoryTex");
 	_vec.push_back(L"CFadeUIScript");
 	_vec.push_back(L"CBladeAfterImage");
+	_vec.push_back(L"CSkySphere");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -432,6 +434,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CFadeUIScript;
 	if (L"CBladeAfterImage" == _strScriptName)
 		return new CBladeAfterImage;
+	if (L"CSkySphere" == _strScriptName)
+		return new CSkySphere;
 	return nullptr;
 }
 
@@ -756,6 +760,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::BLADEAFTERIMAGE:
 		return new CBladeAfterImage;
+		break;
+	case (UINT)SCRIPT_TYPE::SKYSPHERE:
+		return new CSkySphere;
 		break;
 	}
 	return nullptr;
@@ -1187,6 +1194,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::BLADEAFTERIMAGE:
 		return L"CBladeAfterImage";
+		break;
+
+	case SCRIPT_TYPE::SKYSPHERE:
+		return L"CSkySphere";
 		break;
 
 	}
