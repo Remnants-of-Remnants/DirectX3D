@@ -84,6 +84,7 @@ void CSkyBox::UpdateData()
 	Transform()->UpdateData();
 
 	GetMaterial(0)->SetScalarParam(SCALAR_PARAM::INT_0, (int)m_SkyBoxType);
+	GetMaterial(0)->SetScalarParam(SCALAR_PARAM::FLOAT_0, m_fAlpha);
 
 	if (SKYBOX_TYPE::SPHERE == m_SkyBoxType)
 	{

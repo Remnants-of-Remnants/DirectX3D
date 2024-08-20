@@ -29,6 +29,9 @@ void SkyBoxUI::render_update()
 	static const char* cSelectSphere = NULL;
 	static const char* cSelectCube	 = NULL;
 
+	// 알파값
+	ImGui::DragFloat("Alpha", &(GetTargetObject()->SkyBox()->m_fAlpha), 0.1f, 0.f, 1.f);
+
 	// 타입 선택
 	ImGui::Text("SkyBoxType");
 	ImGui::SameLine();
@@ -56,11 +59,12 @@ void SkyBoxUI::render_update()
 	// Sphere Type
 	ImGui::SeparatorText("Sphere Texture");
 
-	static bool use_text_color_for_tint = false;
-	ImVec2		uv_min					= ImVec2(0.0f, 0.0f); // Top-left
-	ImVec2		uv_max					= ImVec2(1.0f, 1.0f); // Lower-right
-	ImVec4		tint_col =
-		 use_text_color_for_tint ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
+	static bool use_text_color_for_tint;
+	use_text_color_for_tint = false;
+	ImVec2 uv_min			= ImVec2(0.0f, 0.0f); // Top-left
+	ImVec2 uv_max			= ImVec2(1.0f, 1.0f); // Lower-right
+	ImVec4 tint_col =
+		use_text_color_for_tint ? ImGui::GetStyleColorVec4(ImGuiCol_Text) : ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // No tint
 	ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
 	ImVec2 vScreenPos = ImGui::GetCursorScreenPos();
 

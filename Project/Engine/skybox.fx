@@ -105,6 +105,8 @@ PS_OUT PS_SkyBox(VS_SKYBOX_OUT _in) : SV_Target
         output.vRelativeLuminance = float4(0.f, 0.f, 0.f, 1.f);
     }
     
+    output.vEmissive.a = g_float_0;
+    
     return output;
 }
 

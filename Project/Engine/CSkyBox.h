@@ -15,6 +15,7 @@ private:
 
 	Ptr<CTexture> m_SphereTex;
 	Ptr<CTexture> m_CubeTex;
+	float		  m_fAlpha = 1.f;
 
 public:
 	void SetSkyBoxType(SKYBOX_TYPE _Type);
