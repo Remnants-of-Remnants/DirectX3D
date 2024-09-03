@@ -23,6 +23,7 @@
 
 ### DirectXTex
 - vcpkg install directxtex[openexr]:x64-windows
+- dependency : vcpkg install physx:x64-windows
 
 ---
 
