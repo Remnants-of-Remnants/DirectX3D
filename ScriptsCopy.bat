@@ -1,4 +1,2 @@
-rmdir /s /q ".\External\Include\Scripts"
-mkdir ".\External\Include\Scripts"
-
-xcopy /s /y  /exclude:exclude_list.txt ".\Project\Scripts\*.h" ".\External\Include\Scripts"
+robocopy ".\Project\Scripts" ".\External\Include\Scripts" *.h /S /NJH /NJS /NFL /NDL
+exit /B 0

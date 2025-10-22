@@ -100,6 +100,9 @@ void CEnvMgr::init()
 
 void CEnvMgr::ImguiInit()
 {
+	if (m_bImguiActivate.empty())
+		return;
+
 	m_bImguiActivate[0] ? CImGuiMgr::GetInst()->FindUI("##Outliner")->Activate()
 						: CImGuiMgr::GetInst()->FindUI("##Outliner")->Deactivate();
 	m_bImguiActivate[1] ? CImGuiMgr::GetInst()->FindUI("##Content")->Activate()

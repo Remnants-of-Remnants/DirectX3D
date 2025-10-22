@@ -1,5 +1,3 @@
-rmdir /s /q ".\External\Include\Engine"
-mkdir ".\External\Include\Engine"
-xcopy /s /y  /exclude:exclude_list.txt ".\Project\Engine\*.h" ".\External\Include\Engine"
-xcopy /s /y  /exclude:exclude_list.txt ".\Project\Engine\*.inl" ".\External\Include\Engine"
-xcopy /s /y  /exclude:exclude_list.txt ".\Project\Engine\*.fx" ".\OutputFile\content\shader"
+robocopy ".\Project\Engine" ".\External\Include\Engine" *.h *.inl /S /NJH /NJS /NFL /NDL
+robocopy ".\Project\Engine" ".\OutputFile\content\shader" *.fx /S /NJH /NJS /NFL /NDL
+exit /B 0
